@@ -1,12 +1,14 @@
 #include <iostream>
+#include <memory>
 #include <algorithm>
 #include <vector>
-#define K 2
-#define N 3
+#define K2 2
+#define N2 3
 using namespace std;
 
-double* func(int A[K][N], int B[N][K]) {
-    double* arr = new double[K];
+template<int N, int K>
+unique_ptr<double[]> func(int (&A)[K][N], int (&B)[N][K]) {
+    auto arr = unique_ptr<double[]>(new double{K});
     for(int i = 0; i < K; ++i) {
         vector<int> t;
         int sum = 0;
@@ -24,18 +26,18 @@ double* func(int A[K][N], int B[N][K]) {
 }
 
 int main() {
-    int A[K][N] = {
+    int A[K2][N2] = {
         {3, 7, 10},
         {5, 12, 32},
     };
-    int B[N][K] = {
+    int B[N2][K2] = {
         {12, 10},
         {15, 17},
         {8, 0},
     };
-    double* x = func(A, B);
+    auto x = func(A, B);
 
-    for(int i = 0; i < K; ++i)
+    for(int i = 0; i < K2; ++i)
         cout << x[i] << ' ';
     
     cout << endl;

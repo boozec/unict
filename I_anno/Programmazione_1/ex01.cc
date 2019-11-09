@@ -6,11 +6,12 @@
 
 using namespace std;
 
-bool func(int a[K][N][N], int w) {
+template<int KK, int NN>
+bool func(int (&a)[KK][NN][NN], int w) {
 	vector<int> list;
-	for(int i = 0; i < K; ++i) {
+	for(int i = 0; i < KK; ++i) {
 		list.clear();
-		for(int j = 0; j < N; ++j)
+		for(int j = 0; j < NN; ++j)
 			list.push_back(a[i][j][j]);
 			
 		auto mm = minmax_element(begin(list), end(list));

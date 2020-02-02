@@ -35,11 +35,11 @@ string* func(string a[N][N], short k, string s) {
 
 int main() {
     string a[N][N] = {
-        {"aab", "bbc", "dde"},
+        {"aab", "bbc", "4de"},
         {"xyb", "bbc", "yz3"},
         {"47x", "1y_", "23g"},
     };
-    string* x = func(a, 3, "bb");
+    string* x = func(a, 1, "4");
 
     for(int i = 0; i < N; ++i)
         cout << x[i] << ' ';

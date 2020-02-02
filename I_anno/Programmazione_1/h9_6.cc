@@ -14,8 +14,7 @@ int main() {
 
     for(auto i = 0; i < N; ++i) {
         bool finish{false};
-        int index{0};
-        for(auto j = 0; j < M-1; ++j) {
+        for(auto j = 0, index = 0; j < M-1; ++j, ++index) {
             int sum{0};
             for(auto zz = index; zz < index+z; ++zz) {
                 sum+=V[i][zz];
@@ -25,7 +24,6 @@ int main() {
                     break;
                 }
             }
-            index++;
             if(finish) break;
         }
     }

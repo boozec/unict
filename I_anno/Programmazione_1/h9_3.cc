@@ -4,6 +4,7 @@
 // Dato array V=NxM e uno grande W, trovare il numero di elementi presenti in W che sono compresi in ogni riga di V
 
 int main() {
+    std::cout << __cplusplus;
     const auto N = 4, M = 4, L = 3;
     int V[N][M] = {
         {3, 1, 5, 50},

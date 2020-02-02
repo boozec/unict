@@ -2,8 +2,6 @@
 #include <memory>
 #include <algorithm>
 #include <vector>
-#define K2 2
-#define N2 3
 using namespace std;
 
 template<int N, int K>
@@ -26,6 +24,7 @@ unique_ptr<double[]> func(int (&A)[K][N], int (&B)[N][K]) {
 }
 
 int main() {
+    const int N2 = 3, K2 = 2;
     int A[K2][N2] = {
         {3, 7, 10},
         {5, 12, 32},

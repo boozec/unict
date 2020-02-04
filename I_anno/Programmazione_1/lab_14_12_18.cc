@@ -58,31 +58,54 @@ private:
 };
 
 template<typename T>
-class C : public A {
+class C;
+
+template<>
+class C<double> : public A {
 public:
 	C(short n) : A{n} {
-		if(typeid(T) == typeid(short)) {
-			x = g(n);
-		} else {
-			x = static_cast<double>(log(1+n));
-		}
+		x = static_cast<double>(log(1+n));
 	}
 
 	double foo(short r) const {
 		return g(r*x);
 	}
 
-	T g(T k) const {
+	double g(double k) const {
 		return 3*k;
 	}
 
 	void print(ostream& os) {
-		os << "C<" << typeid(T).name() << "> ";
+		os << "C<double> ";
 		getPtr(os);
 		os << ", x=" << x;
 	}
 private:
-	T x;
+	short x;
+};
+
+template<>
+class C<int> : public A {
+public:
+	C(short n) : A{n} {
+		x = g(n);
+	}
+
+	double foo(short r) const {
+		return g(r*x);
+	}
+
+	short g(short k) const {
+		return 3*k;
+	}
+
+	void print(ostream& os) {
+		os << "C<short> ";
+		getPtr(os);
+		os << ", x=" << x;
+	}
+private:
+	short x;
 };
 
 ostream& operator<<(ostream& os, A& a) {

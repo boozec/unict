@@ -3,11 +3,10 @@
 using namespace std;
 
 void merge(int A[], int l, int q, int r) {
-    int size = (sizeof(*A)*2)+1;
     int i = l;
     int j = q+1;
     int k = l;
-    int B[size];
+    int B[r];
 
     while((i <= q) && (j <= r)) {
         if(A[i] <= A[j])

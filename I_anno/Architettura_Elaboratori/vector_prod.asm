@@ -1,6 +1,6 @@
-array1		dcd		1, 3, 4, 1
-array2		dcd		1, 0, 2, 0
-arrayn		dcd		4
+array1			dcd		1, 3, 4, 1
+array2			dcd		1, 0, 2, 0
+arrayn			dcd		4
 			
 			mov		r0, #arrayn
 			ldr		r0, [r0]		; r0 = lunghezza array

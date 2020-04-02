@@ -3,7 +3,7 @@ array2		dcd		1, 0, 2, 0
 arrayn		dcd		4
 			
 			mov		r0, #arrayn
-			ldr		r0, [r0]			; r0 = lunghezza array
+			ldr		r0, [r0]		; r0 = lunghezza array
 			
 			mov		r1, #array1     	; r1 = puntatore al primo array
 			mov		r2, #array2     	; r2 = puntatore al secondo array
@@ -12,18 +12,18 @@ loop
 			cmp		r0, #0
 			beq		loop_end
 			
-			ldr		r3, [r1]			; r3 = valore a cui punta r1
-			ldr		r4, [r2]			; r4 = valore a cui punta r2
+			ldr		r3, [r1]		; r3 = valore a cui punta r1
+			ldr		r4, [r2]		; r4 = valore a cui punta r2
 			
-			cmp		r3, #0			    ; se r3 è 0, la moltiplicazione sarà 0
+			cmp		r3, #0			; se r3 è 0, la moltiplicazione sarà 0
 			beq		r3_store
 			blt		after_neg3	    	; se r3 è negativo, cambia il filtro a 1
 jp_before4
 			cmp		r4, #0		    	; se r4 è 0, la moltiplicazione sarà 0
 			beq		r4_store
-			blt		after_neg4		    ; se r4 è negativo, controlla se il filtro è già 1, in caso lo cambia
+			blt		after_neg4		; se r4 è negativo, controlla se il filtro è già 1, in caso lo cambia
 jp_after4
-			cmp		r3, r4				; confronta r3 e r4 per fare la moltiplicazione con ciclo minore
+			cmp		r3, r4			; confronta r3 e r4 per fare la moltiplicazione con ciclo minore
 			bgt		mul_r3
 			ble		mul_r4
 			
@@ -49,7 +49,7 @@ after_neg4
 			mvn		r4, r4
 			add		r4, r4, #1
 			cmp		r6, #1
-			beq		restart_r6 		    ; re inserisce il valore 0 perché fa prodotto di due negativi
+			beq		restart_r6 		; re inserisce il valore 0 perché fa prodotto di due negativi
 			
 			mov		r6, #1
 			b		jp_after4
@@ -88,7 +88,7 @@ mul_r3
 			add		r3, r3, r3
 			
 			sub		r4, r4, #1
-			b	    mul_r3
+			b	    	mul_r3
 			
 mul_r4
 			cmp		r3, #1

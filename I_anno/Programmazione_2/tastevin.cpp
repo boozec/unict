@@ -1,6 +1,7 @@
 #include<iostream>
 #include<fstream>
 #include<vector>
+#include<algorithm>
 
 using namespace std;
 
@@ -11,52 +12,24 @@ int main() {
     for(int ts = 0; ts < 100; ++ts) {
         int N;
         in >> N;
-        vector<int> arr;
-        int e;
+        vector<int> arr(N);
         for(int i = 0; i < N; ++i) {
-            in >> e;
-            arr.push_back(e);
+            in >> arr.at(i);
         }
 
-        int max_value{};
-        int value;
+        vector<int> paths(N, 1);
 
-        for(int i = 0; i < N; ++i) {
-            vector<int> tmp;
-            tmp.push_back(i);
-            value = arr[i];
+        for(int i = N-2; i >= 0; --i) {
+            int mx = 0;
             for(int j = i+2; j < N; ++j) {
-                if(arr[j] >= value) {
-                    tmp.push_back(j);
-                    value = arr[j];
-                    ++j;
+                if(mx < paths[j] && arr[j] >= arr[i]) {
+                    mx = paths[j];
                 }
             }
-            while(!tmp.empty()) {
-                if(tmp.size() > max_value) {
-                    for(auto const&i : tmp) {
-                        cout << i << ' ';
-                    }
-                    cout << endl;
-                    max_value = tmp.size();
-                }
-                int k = tmp.back();
-                tmp.pop_back();
-                if(tmp.size() > 0)
-                    value = arr[tmp.back()];
-                else
-                    value = arr[k];
-                for(int j = k+1; j < N; ++j) {
-                    if(arr[j] >= value) {
-                        value = arr[j];
-                        tmp.push_back(j);
-                        ++j;
-                    }
-                }
-            }
+            paths[i] += mx;
         }
 
-        out << max_value << '\n';
+        out << *max_element(begin(paths), end(paths)) << '\n';
     }
 
     in.close();

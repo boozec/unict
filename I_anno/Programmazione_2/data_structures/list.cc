@@ -58,6 +58,9 @@ public:
     list* push_before_value(T val, T newval) {
         node<T>* iter = _head;
 
+        if(iter->value == val)
+            return this->push_front(newval);
+
         while(iter && iter->next && iter->next->value != val)
             iter = iter->next;
 
@@ -65,6 +68,41 @@ public:
             return this->push_front(newval);
 
         iter->next = new node<T>{newval, iter->next};
+
+        return this;
+    }
+
+    list* pop_front() {
+        if(_head == nullptr)
+            return this;
+
+        node<T>* elem = _head;
+        _head = _head->next;
+        delete elem;
+
+        return this;
+    }
+
+    list* pop_back() {
+        if(_head == nullptr)
+            return this;
+
+        node<T>* iter = _head;
+
+        while(iter->next && iter->next->next) {
+            iter = iter->next;
+        }
+
+        if(iter->next == nullptr) {
+            delete iter;
+            _head = nullptr;
+        } else if(iter->next->next) {
+            delete iter->next->next;
+        } else {
+            delete iter->next;
+        }
+
+        iter->next = nullptr;
 
         return this;
     }
@@ -81,25 +119,36 @@ private:
 };
 
 int main() {
-    list<double>* l = new list<double>{};
-    l->push_front(2)->push_front(1.7);
-    // 1.7 2
+    list<int>* l = new list<int>{};
+    l->push_front(2)->push_front(1);
+    l->print(); cout << endl;
+    l->push_back(5);
+    l->print(); cout << endl;
+    l->push_back(10)->push_back(15);
+    l->print(); cout << endl;
+    l->push_after_value(5, 6);
+    l->print(); cout << endl;
+    l->push_before_value(5, 4);
+    l->print(); cout << endl;
+    l->push_before_value(4, 3);
+    l->print(); cout << endl;
+    l->pop_back();
+    l->print(); cout << endl;
+    l->pop_front();
+    l->print(); cout << endl;
+    l->push_front(1);
+    l->print(); cout << endl;
 
-    l->push_back(5.2);
-    // 2 1.7 5.2
-
-    l->push_back(10.1)->push_back(15);
-    // 2 1.7 5.2 10.1 15
-
-    l->push_after_value(5.2, 6.4);
-    // 2 1.7 5.2 6.4 10.1 15
-
-    l->push_before_value(5.2, 4.1);
-    // 2 1.7 4.1 5.2 6.4 10.1 15
-
-    l->push_before_value(4.1, 3.0);
-    // 2 1.7 3.0 4.1 5.2 6.4 10.1 15
-    l->print();
+    // output
+    // 1 2
+    // 1 2 5
+    // 1 2 5 10 15
+    // 1 2 5 6 10 15
+    // 1 2 4 5 6 10 15
+    // 1 2 3 4 5 6 10 15
+    // 1 2 3 4 5 6 10
+    // 2 3 4 5 6 10
+    // 1 2 3 4 5 6 10
 
     return 0;
 }

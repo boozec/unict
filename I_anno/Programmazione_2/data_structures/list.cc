@@ -72,6 +72,23 @@ public:
         return this;
     }
 
+    list* pop(int val) {
+        if(_head == nullptr)
+            return this;
+        else if(_head->value == val) 
+            return pop_front();
+
+        node<T>* iter = _head;
+        while(iter && iter->next && iter->next->value != val)
+            iter = iter->next;
+
+        node<T>* temp = iter->next;
+        iter->next = iter->next->next;
+        delete temp;
+
+        return this;
+    }
+
     list* pop_front() {
         if(_head == nullptr)
             return this;
@@ -138,17 +155,8 @@ int main() {
     l->print(); cout << endl;
     l->push_front(1);
     l->print(); cout << endl;
-
-    // output
-    // 1 2
-    // 1 2 5
-    // 1 2 5 10 15
-    // 1 2 5 6 10 15
-    // 1 2 4 5 6 10 15
-    // 1 2 3 4 5 6 10 15
-    // 1 2 3 4 5 6 10
-    // 2 3 4 5 6 10
-    // 1 2 3 4 5 6 10
+    l->pop(1);
+    l->print(); cout << endl;
 
     return 0;
 }

@@ -33,6 +33,8 @@ public:
     }
 
     node<T>* search(T val) {
+        if(_head == nullptr) return nullptr;
+
         node<T>* iter = _head;
         if(iter->value == val) 
             return iter;

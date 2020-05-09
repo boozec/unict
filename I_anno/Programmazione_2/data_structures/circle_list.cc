@@ -31,6 +31,22 @@ public:
         return iter;
     }
 
+    node<T>* search(T val) {
+        if(_head == nullptr) return nullptr;
+
+        node<T>* iter = _head;
+        if(iter->value == val) 
+            return iter;
+
+        while(iter && iter->value != val) {
+            iter = iter->next;
+        }
+
+        if(iter == _head) return nullptr;
+
+        return iter;
+    }
+
     list* push_front(T val) {
         auto elem = last_element();
         _head = new node<T>{val, _head};
@@ -56,6 +72,8 @@ public:
     }
 
     list* push_after_value(T val, T newval) {
+        if(!search(val)) return this;
+
         node<T>* iter = _head;
         while(iter && iter->value != val)
             iter = iter->next;
@@ -69,6 +87,8 @@ public:
     }
 
     list* push_before_value(T val, T newval) {
+        if(!search(val)) return this;
+
         node<T>* iter = _head;
 
         if(iter->value == val)
@@ -140,6 +160,7 @@ private:
 
 int main() {
     list<int>* l = new list<int>{};
+    l->push_before_value(4, 1);
     l->push_back(4);
     l->push_back(1);
     l->push_back(0);

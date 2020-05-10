@@ -38,13 +38,13 @@ void mergesort(int A[], int l, int r) {
 
 
 int main() {
-    int a[] = {2, 4, 72, 100, 2, 12, 0, 0, 1, 23, 45, 12, 120, 3, 6};
-    for(int i = 0; i < 15; ++i) {
+    int a[] = {7,1,22,3,2,12,27,31,6};
+    for(int i = 0; i < 9; ++i) {
         cout << a[i] << ' ';
     }
     cout << endl;
-    mergesort(a, 0, 14);
-    for(int i = 0; i < 15; ++i) {
+    mergesort(a, 0, 8);
+    for(int i = 0; i < 9; ++i) {
         cout << a[i] << ' ';
     }
 

@@ -12,6 +12,7 @@ template<class T>
 class stack {
 public:
     stack() : _head{nullptr} {}
+
     ~stack() {
         auto iter = _head;
         while(iter) {
@@ -19,6 +20,7 @@ public:
             iter = iter->next;
         }
     }
+
     stack<T>* push(T val) {
 
         if(!_head) {

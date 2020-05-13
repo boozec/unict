@@ -23,22 +23,6 @@ public:
         }
     }
 
-    node<T>* search(T val) {
-        if(_head == nullptr) return nullptr;
-
-        node<T>* iter = _head;
-        if(iter->value == val) 
-            return iter;
-
-        while(iter && iter->value != val) {
-            iter = iter->next;
-        }
-
-        if(iter == _head) return nullptr;
-
-        return iter;
-    }
-
     list* push_front(T val) {
         if(_head == nullptr) {
             _head = new node<T>{val, nullptr, nullptr};
@@ -51,49 +35,39 @@ public:
     }
 
     list* push_back(T val) {
+        if(!_head) return this->push_front(val);
+
         node<T>* iter = _head;
-        if(_head == nullptr) {
-            _head = new node<T>{val, nullptr, nullptr};
-        } else {
-            while(iter->next != nullptr) {
-                iter = iter->next;
-            }
-            iter->next = new node<T>{val, iter, nullptr};
+        while(iter->next) {
+            iter = iter->next;
         }
+        iter->next = new node<T>{val, iter, nullptr};
 
         return this;
     }
 
     list* push_after_value(T val, T newval) {
-        if(!search(val)) return this;
-
-        node<T>* iter = _head;
-        while(iter && iter->value != val)
-            iter = iter->next;
-
-        if(iter == nullptr)
-            return this->push_front(newval);
-
-        node<T>* nod = new node<T>{newval, iter, iter->next};
-        iter->next = nod;
-        nod->next->prev = nod;
+        node<T>* elem = _search(val);
+        if(elem) {
+            node<T>* nod = new node<T>{newval, elem, elem->next};
+            elem->next = nod;
+            nod->next->prev = nod;
+        }
 
         return this;
     }
 
     list* push_before_value(T val, T newval) {
-        if(!search(val)) return this;
+        node<T>* elem = _search(val);
+        if(!elem) return this;
 
         node<T>* iter = _head;
 
         if(iter->value == val)
             return this->push_front(newval);
 
-        while(iter && iter->next && iter->next->value != val)
+        while(iter->next != elem)
             iter = iter->next;
-
-        if(iter == nullptr)
-            return this->push_front(newval);
 
         node<T>* nod = new node<T>{newval, iter, iter->next};
         iter->next = nod;
@@ -103,15 +77,13 @@ public:
     }
 
     list* pop(int val) {
-        if(_head == nullptr)
-            return this;
-        else if(_head->value == val) 
-            return pop_front();
-
-        if(!search(val)) return this;
+        node<T>* elem = _search(val);
+        if(!elem) return this;
 
         node<T>* iter = _head;
-        while(iter && iter->next && iter->next->value != val)
+        if(iter == elem) return this->pop_front();
+
+        while(iter->next != elem)
             iter = iter->next;
 
         node<T>* temp = iter->next;
@@ -168,6 +140,14 @@ public:
         }
     }
 private:
+    node<T>* _search(T value) {
+        node<T>* iter = _head;
+        while(iter && iter->value != value)
+            iter = iter->next;
+
+        return iter;
+    }
+
     node<T>* _head;
 };
 
@@ -193,6 +173,8 @@ int main() {
     l->print(); cout << endl;
     l->pop(2);
     l->print(); cout << endl;
+
+    delete l;
 
     return 0;
 }

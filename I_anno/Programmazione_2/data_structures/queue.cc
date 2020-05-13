@@ -12,6 +12,7 @@ template<class T>
 class queue {
 public:
     queue() : _head{nullptr} {}
+
     ~queue() {
         auto iter = _head;
         while(iter) {
@@ -19,6 +20,7 @@ public:
             iter = iter->next;
         }
     }
+
     queue<T>* enqueue(T val) {
 
         if(!_head) {

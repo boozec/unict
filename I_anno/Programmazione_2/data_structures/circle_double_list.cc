@@ -83,12 +83,9 @@ public:
         node<T>* elem = _search(val);
         if(!elem) return this;
 
-        node<T>* iter = _head;
-        if(iter == elem) return this->pop_front();
+        if(elem == _head) return this->pop_front();
 
-        while(iter->next != elem)
-            iter = iter->next;
-
+        node<T>* iter = elem->prev;
         node<T>* temp = iter->next;
         iter->next = iter->next->next;
         iter->next->prev = iter;
@@ -115,17 +112,13 @@ public:
         if(!_head)
             return this;
 
-        node<T>* iter = _head;
         auto last_e = _last();
 
         if(last_e == _head) {
-            delete iter;
+            delete _head;
             _head = nullptr;
         } else {
-            while(iter->next != last_e) {
-                iter = iter->next;
-            }
-
+            auto iter = last_e->prev;
             delete iter->next;
             iter->next = _head;
             _head->prev = iter;

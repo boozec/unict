@@ -34,19 +34,21 @@ public:
         return this;
     }
 
-    queue<T>* dequeue() {
+    node<T>* dequeue() {
         auto iter = _head;
 
-        if(!_head) return this;
+        if(!_head) return nullptr;
         while(iter->next != _tail) {
             iter = iter->next;
         }
+
+        node<T>* elem = iter->next;
 
         delete iter->next;
         iter->next = nullptr;
         _tail = iter;
 
-        return this;
+        return elem;
     }
 
     void print() {
@@ -67,7 +69,10 @@ int main() {
 
     q->dequeue();
     q->enqueue(4)->enqueue(2)->enqueue(8);
-    q->dequeue();
+    q->print();
+    auto e = q->dequeue();
+    if(e)
+        cout << e->value << endl;
     q->enqueue(1);
     q->print();
 

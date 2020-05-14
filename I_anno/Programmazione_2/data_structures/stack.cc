@@ -32,14 +32,14 @@ public:
         return this;
     }
 
-    stack<T>* pop() {
-        if(!_head) return this;
+    node<T>* pop() {
+        if(!_head) return nullptr;
 
         auto old_head = _head;
+        delete _head;
         _head = _head->next;
-        delete old_head;
 
-        return this;
+        return old_head;
     }
 
     void print() {
@@ -59,7 +59,10 @@ int main() {
 
     s->pop();
     s->push(4)->push(2)->push(8);
-    s->pop();
+    s->print();
+    auto e = s->pop();
+    if(e)
+        cout << e->value << endl;
     s->push(1);
     s->print();
 

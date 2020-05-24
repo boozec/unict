@@ -35,20 +35,11 @@ public:
     }
 
     node<T>* dequeue() {
-        auto iter = _head;
-
         if(!_head) return nullptr;
-        while(iter->next != _tail) {
-            iter = iter->next;
-        }
-
-        node<T>* elem = iter->next;
-
-        delete iter->next;
-        iter->next = nullptr;
-        _tail = iter;
-
-        return elem;
+        auto iter = _head;
+        delete _head;
+        _head = iter->next;
+        return iter;
     }
 
     void print() {
@@ -60,8 +51,8 @@ public:
         cout << endl;
     }
 private:
-    node<T>* _tail;
     node<T>* _head;
+    node<T>* _tail;
 };
 
 int main() {

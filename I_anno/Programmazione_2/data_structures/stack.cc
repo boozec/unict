@@ -34,12 +34,11 @@ public:
 
     node<T>* pop() {
         if(!_head) return nullptr;
-
-        auto old_head = _head;
+        node<T>* elem = _head;
         delete _head;
-        _head = _head->next;
+        _head = elem->next;
 
-        return old_head;
+        return elem;
     }
 
     void print() {

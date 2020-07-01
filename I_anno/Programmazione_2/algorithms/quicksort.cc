@@ -29,7 +29,7 @@ int main() {
         cout << a[i] << ' ';
     }
     cout << endl;
-    quicksort(a, 0, 9);
+    quicksort(a, 0, 8);
     for(int i = 0; i < 9; ++i) {
         cout << a[i] << ' ';
     }

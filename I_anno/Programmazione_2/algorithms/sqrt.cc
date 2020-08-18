@@ -31,6 +31,14 @@ double sq2(int n) {
     return sq2_n(n, n/2);
 }
 
+double sqrt_d(int n) {
+    double x = 1;
+    while(abs(x*x-n)>=0.0000001) {
+        x = ((n/x)+x)/2;
+    }
+    return x;
+}
+
 int main() {
     cout << sq(81) << endl;
     cout << sq2(81) << endl;

@@ -2,29 +2,20 @@
 
 using namespace std;
 
-int pow(int b, int e) {
-    if(e == 0) return 1;
-    int a = b;
-    int inc = b;
-    for(int i = 0; i < e-1; ++i) {
-        for(int j = 0; j < b-1; ++j) {
-            a+=inc;
-        }
-        inc = a;
-    }
+int pow(int x, int y) {
+    int a = 1;
+    
+    for(int i = 0; i < y; ++i)
+        a*=x;
+    
     return a;
 }
 
-int mul(int b, int e) {
-    if(e == 0) return 0;
 
-    return b+mul(b, e-1);
-}
-
-int pow2(int b, int e) {
-    if(e == 0) return 1;
-
-    return mul(b, pow(b, e-1));
+int pow2(int x, int y) {
+    if(y < 1) return 1;
+    
+    return x*pow(x, y-1);
 }
 
 int main() {

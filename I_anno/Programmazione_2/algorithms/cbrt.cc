@@ -16,6 +16,19 @@ int cbrt(int n) {
     return q;
 }
 
+double cbrt2(int n) {
+    int i = 1;
+    while(i*i*i <= n)
+        ++i;
+    // precision
+    
+    --i;
+    while(i*i*i < n)
+        i+=0.000001;
+    
+    return i;
+}
+
 int main() {
     int i;
     cin >> i;

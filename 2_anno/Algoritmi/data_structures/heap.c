@@ -56,7 +56,6 @@ int* heapsort(int* a, int n) {
     build(a, n);
     for(unsigned i = 0; i < n; ++i) {
         b[i] = extract(a);
-;
     }
 
     return b;

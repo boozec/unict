@@ -5,7 +5,7 @@
 unsigned heapsize = 0;
 
 int compare(int x, int y) {
-    return (HEAP_TYPE) ? x < y : x > y;
+    return (!HEAP_TYPE) ? x < y : x > y;
 }
 
 void swap(int* a, int x, int y) {
@@ -29,8 +29,8 @@ void heapify(int* a, int n, int i) {
     int r = l | 1;
 
     int max = i;
-    if(l <= n && compare(a[l], a[max])) max = l;
-    if(r <= n && compare(a[r], a[max])) max = r;
+    if(l <= n && !compare(a[l], a[max])) max = l;
+    if(r <= n && !compare(a[r], a[max])) max = r;
 
     if(max != i) {
         swap(a, i, max);
@@ -56,7 +56,6 @@ int* heapsort(int* a, int n) {
     build(a, n);
     for(unsigned i = 0; i < n; ++i) {
         b[i] = extract(a);
-;
     }
 
     return b;
@@ -73,6 +72,18 @@ void increase_key(int* a, int i, int k) {
 int main() {
     heapsize = 6;
     int* a = malloc(sizeof(int) * 7);
+
+    a[1] = 5;
+    a[2] = 24;
+    a[3] = 1;
+    a[4] = 12;
+    for(unsigned i = 1; i < 7; ++i)
+        printf("%d ", a[i]);
+    printf("\n");
+    build(a, 4);
+    for(unsigned i = 1; i < 7; ++i)
+        printf("%d ", a[i]);
+    printf("\n\n");
 
     for(unsigned i = 1; i < 7; ++i)
         a[i] = i;

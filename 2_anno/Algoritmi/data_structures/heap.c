@@ -54,7 +54,7 @@ int extract(int* a) {
 int* heapsort(int* a, int n) {
     int* b = malloc(sizeof(int) * n);
     build(a, n);
-    for(unsigned i = 0; i < n; ++i) {
+    for(unsigned i = n-1; i != -1; --i) {
         b[i] = extract(a);
     }
 
@@ -70,42 +70,23 @@ void increase_key(int* a, int i, int k) {
 }
 
 int main() {
-    heapsize = 6;
+    heapsize = 0;
     int* a = malloc(sizeof(int) * 7);
 
-    a[1] = 5;
-    a[2] = 24;
-    a[3] = 1;
-    a[4] = 12;
-    for(unsigned i = 1; i < 7; ++i)
-        printf("%d ", a[i]);
-    printf("\n");
-    build(a, 4);
-    for(unsigned i = 1; i < 7; ++i)
-        printf("%d ", a[i]);
-    printf("\n\n");
+    insert(a, 5);
+    insert(a, 24);
+    insert(a, 1);
+    insert(a, 12);
+    insert(a, 35);
+    insert(a, -1);
 
-    for(unsigned i = 1; i < 7; ++i)
-        a[i] = i;
-    build(a, 6);
+    printf("heap = ");
     for(unsigned i = 1; i <= heapsize; ++i)
         printf("%d ", *(a+i));
 
-    printf("\n");
-    printf("max value = %d\n", extract(a));
-
-    for(unsigned i = 1; i <= heapsize; ++i)
-        printf("%d ", *(a+i));
-
-    printf("\n");
-    increase_key(a, 1, 4);
-    for(unsigned i = 1; i <= heapsize; ++i)
-        printf("%d ", *(a+i));
-    printf("\n");
     int n = heapsize;
     int* b = heapsort(a, heapsize);
-
-    printf("heapsort = ");
+    printf("\nheapsort = ");
     for(unsigned i = 0; i < n; ++i)
         printf("%d ", *(b+i));
     free(b);

@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<!DOCTYPE libretti SYSTEM "university_marks.dtd">
+<libretti>
+    <libretto>
+        <studente cdl="Computer engineering" matricola="0000122">
+            <nome>Luke</nome>
+            <cognome>Don</cognome>
+        </studente>
+        <esami>
+            <esame>
+                <materia>Algebra</materia>
+                <data>2021-02-02</data>
+                <voto>30</voto>
+            </esame>
+        </esami>
+    </libretto>
+    <libretto>
+        <studente cdl="Computer science" matricola="0000123">
+            <nome>John</nome>
+            <cognome>Doe</cognome>
+        </studente>
+        <esami>
+            <esame>
+                <materia>Databases</materia>
+                <data>2021-02-06</data>
+                <voto>18</voto>
+            </esame>
+        </esami>
+    </libretto>
+    <libretto>
+        <studente cdl="Computer science" matricola="0000125">
+            <nome>Mark</nome>
+            <cognome>Zuck</cognome>
+        </studente>
+        <esami>
+            <esame>
+                <materia>Databases</materia>
+                <data>2021-02-06</data>
+                <voto>30</voto>
+            </esame>
+        </esami>
+    </libretto>
+</libretti>

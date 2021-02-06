@@ -1,0 +1,14 @@
+<!ELEMENT libretti (libretto)*>
+<!ELEMENT libretto (studente, esami)?>
+<!ELEMENT studente (nome, cognome)>
+<!ELEMENT nome (#PCDATA)>
+<!ELEMENT cognome (#PCDATA)>
+<!ATTLIST studente
+    cdl CDATA #REQUIRED
+    matricola CDATA #REQUIRED
+>
+<!ELEMENT esami (esame)+>
+<!ELEMENT esame (materia, data, voto)>
+<!ELEMENT materia (#PCDATA)>
+<!ELEMENT data (#PCDATA)>
+<!ELEMENT voto (#PCDATA)>

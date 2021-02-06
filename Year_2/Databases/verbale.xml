@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE verbali SYSTEM "verbale.dtd">
+<verbali>
+    <verbale>
+        <studente cdl="667" matr="123456">
+            <nome>Filippo</nome>
+            <nome>Maria</nome>
+            <cognome>Rossi</cognome>
+        </studente>
+        <esame>
+            <materia>Data Mining</materia>
+            <docente>Ferro</docente>
+            <voto>30</voto>
+            <lode>Sì</lode>
+            <data>01/04/04</data>
+        </esame>
+    </verbale>
+    <verbale>
+        <studente cdl="667" matr="554312">
+            <nome>Gregorio</nome>
+            <cognome>Cantone</cognome>
+        </studente>
+        <esame>
+            <materia>Reti di Calcolatori</materia>
+            <docente>Riccobene</docente>
+            <voto>18</voto>
+            <data>02/07/04</data>
+        </esame>
+    </verbale>
+    <verbale>
+        <studente cdl="667" matr="658312">
+            <nome>Marco</nome>
+            <cognome>Bianchi</cognome>
+        </studente>
+        <esame>
+            <materia>Reti di Calcolatori</materia>
+            <docente>Riccobene</docente>
+            <voto>30</voto>
+            <lode>Sì</lode>
+            <data>02/07/04</data>
+        </esame>
+    </verbale>
+    <verbale>
+        <studente cdl="123" matr="654312">
+            <nome>Marco</nome>
+            <cognome>Neri</cognome>
+        </studente>
+        <esame>
+            <materia>Algoritmi</materia>
+            <docente>Cantone</docente>
+            <voto>18</voto>
+            <data>01/07/04</data>
+        </esame>
+    </verbale>
+    <verbale>
+        <studente cdl="667" matr="954312">
+            <nome>Marco</nome>
+            <cognome>Neri</cognome>
+        </studente>
+        <esame>
+            <materia>Reti di Calcolatori</materia>
+            <docente>Riccobene</docente>
+            <voto>30</voto>
+            <data>02/07/04</data>
+        </esame>
+    </verbale>
+</verbali>

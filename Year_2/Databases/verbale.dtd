@@ -1,0 +1,15 @@
+<!ELEMENT verbali (verbale)*>
+<!ELEMENT verbale (studente, esame)>
+<!ELEMENT studente (nome+, cognome+)>
+<!ELEMENT nome (#PCDATA)>
+<!ELEMENT cognome (#PCDATA)>
+<!ATTLIST studente
+    cdl CDATA #REQUIRED
+    matr CDATA #REQUIRED
+>
+<!ELEMENT esame (materia, docente, voto, lode?, data)>
+<!ELEMENT materia (#PCDATA)>
+<!ELEMENT docente (#PCDATA)>
+<!ELEMENT voto (#PCDATA)>
+<!ELEMENT lode (#PCDATA)>
+<!ELEMENT data (#PCDATA)>

@@ -1,0 +1,10 @@
+<!ELEMENT libri (libro)>
+<!ELEMENT libro (autore+, titolo, isbn, introduzione, capitoli)>
+<!ELEMENT autore (#PCDATA)>
+<!ELEMENT titolo (#PCDATA)>
+<!ELEMENT isbn (#PCDATA)>
+<!ELEMENT introduzione (#PCDATA)>
+<!ELEMENT capitoli (capitolo+)>
+<!ELEMENT capitolo (numero, titolo, testo)>
+<!ELEMENT numero (#PCDATA)>
+<!ELEMENT testo (#PCDATA)>

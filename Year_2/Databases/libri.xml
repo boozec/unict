@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE libri SYSTEM "libri.dtd">
+<libri>
+    <libro>
+        <autore>Pirandello</autore>
+        <titolo>Novelle per un anno</titolo>
+        <isbn>1234656</isbn>
+        <introduzione>aaaa</introduzione>
+        <capitoli>
+            <capitolo>
+                <numero>1</numero>
+                <titolo>Capitolo 1</titolo>
+                <testo>...</testo>
+            </capitolo>
+            <capitolo>
+                <numero>2</numero>
+                <titolo>Capitolo 2</titolo>
+                <testo>...</testo>
+            </capitolo>
+        </capitoli>
+    </libro>
+    <libro>
+        <autore>Pirandello</autore>
+        <titolo>Il fu mattia pascal</titolo>
+        <isbn>1234656</isbn>
+        <introduzione>aaaa</introduzione>
+        <capitoli>
+            <capitolo>
+                <numero>1</numero>
+                <titolo>Capitolo 1</titolo>
+                <testo>...</testo>
+            </capitolo>
+            <capitolo>
+                <numero>2</numero>
+                <titolo>Capitolo 2</titolo>
+                <testo>...</testo>
+            </capitolo>
+        </capitoli>
+    </libro>
+    <libro>
+        <autore>Aligheri</autore>
+        <titolo>Divina commedia</titolo>
+        <isbn>1234656</isbn>
+        <introduzione>Nel mezzo del cammin...</introduzione>
+        <capitoli>
+            <capitolo>
+                <numero>1</numero>
+                <titolo>Capitolo 1</titolo>
+                <testo>...</testo>
+            </capitolo>
+            <capitolo>
+                <numero>2</numero>
+                <titolo>Capitolo 2</titolo>
+                <testo>...</testo>
+            </capitolo>
+            <capitolo>
+                <numero>3</numero>
+                <titolo>Capitolo 3</titolo>
+                <testo>...</testo>
+            </capitolo>
+        </capitoli>
+    </libro>
+</libri>

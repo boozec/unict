@@ -1,11 +1,24 @@
+int k = 1;
+
 void setup() {
   size(512, 256);
+}
+
+void draw() {
   PImage img = loadImage("lena.png");
   img.resize(256, 256);
   img.filter(GRAY);
 
   image(img, 0, 0);
-  image(maximum(img, 11), 256, 0);
+  image(maximum(img, k), 256, 0);
+}
+
+void keyPressed() {
+  if (key == '+') {
+    k++;
+  } else if (key == '-') {
+    k--;
+  }
 }
 
 PImage maximum(PImage I, int n) {

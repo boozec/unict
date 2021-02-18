@@ -1,13 +1,25 @@
 void setup() {
   size(768, 256);
+}
+
+float th = 0;
+
+void draw() {
   PImage img = loadImage("lena.png");
   img.resize(256, 256);
-  img.filter(GRAY);
 
   image(img, 0, 0);
-  image(rotate_forward(img, radians(45)), 256, 0);
-  
-  image(inverse_rotate(img, radians(45)), 512, 0);
+  image(rotate_forward(img, radians(th)), 256, 0);
+
+  image(inverse_rotate(img, radians(th)), 512, 0);
+}
+
+void keyPressed() {
+  if (key == '+') {
+    th++;
+  } else if (key == '-') {
+    th--;
+  }
 }
 
 PImage rotate_forward(PImage I, float theta) {

@@ -1,3 +1,7 @@
+/* An example of the work of this file is showed at [1]
+ *
+ * [1] https://it.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Richiesta_GET_e_risposta_di_successo
+ */
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -7,6 +11,33 @@
 #include <unistd.h>
 
 #define DEFAULT_WWW "./www"
+
+typedef enum {
+    GET,
+    /* TODO: types below */
+    HEAD,
+    OPTIONS,
+    POST,
+    PUT,
+    PATCH,
+    DELETE
+} methods;
+
+typedef enum {
+    /* Some of the HTTP versions defined at [1]
+     *
+     * [1] https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#History
+     */
+    HTTP1, /* HTTP/1.0 */
+    HTTP1_1, /* HTTP/1.1 */
+    HTTP2, /* HTTP/2   */
+} http_t;
+
+typedef struct {
+    methods method;
+    char path[256]; /* FIXME: handle path with more than 256 chars */
+    http_t http_version;
+} request_t;
 
 /* TODO: Make the parsing of headers */
 void
@@ -30,7 +61,7 @@ read_headers(int* fd, char** headers, int* headers_num)
                 exit(1);
             }
 
-            *(buffer + i) = ch;
+            buffer[i] = ch;
             if (ch == '\n' && (i < 1 || buffer[i - 1] == '\r')) {
                 break;
             }
@@ -38,12 +69,12 @@ read_headers(int* fd, char** headers, int* headers_num)
             i++;
         }
 
-        buffer[i + 1] = '\0';
+        buffer[i - 1] = '\0';
         if (i < 2) {
             break;
         }
 
-        memcpy(headers[*headers_num], buffer, i + 1);
+        memcpy(headers[*headers_num], buffer, i);
         (*headers_num)++;
     }
 }
@@ -58,6 +89,60 @@ get_client_ip(int fd, char* buffer)
 }
 
 int
+parse_first_line(request_t* request, char* header, size_t len)
+{
+    char* token;
+    int i;
+
+    i = 0;
+    token = strtok(header, " ");
+    do {
+        switch (i) {
+        case 0: {
+            if (strcmp(token, "GET") == 0) {
+                request->method = GET;
+            } else {
+                fprintf(stderr, "'%s' method not supported\n", token);
+                goto parse_error;
+            }
+            /* TODO: Handle the other HTTP methods */
+            break;
+        }
+        case 1: {
+            strcpy(request->path, token);
+            break;
+        }
+        case 2: {
+            if (strcmp(token, "HTTP/1.0") == 0) {
+                request->http_version = HTTP1;
+            } else if (strcmp(token, "HTTP/1.1") == 0) {
+                request->http_version = HTTP1_1;
+            } else if (strcmp(token, "HTTP/2") == 0) {
+                request->http_version = HTTP2;
+            } else {
+                fprintf(stderr, "'%s' version not supported\n", token);
+                goto parse_error;
+            }
+            break;
+        }
+        /* If it comes here, it means that the header have more than 3 tokens */
+        default: {
+            fprintf(stderr, "Header does not have a valid syntax\n");
+            goto parse_error;
+        }
+        }
+
+        i++;
+        token = strtok(NULL, " ");
+    } while (token != NULL);
+
+    return 0;
+
+parse_error:
+    return -1;
+}
+
+int
 main(int argc, char* argv[])
 {
     char* www_path;
@@ -68,6 +153,8 @@ main(int argc, char* argv[])
     struct sockaddr_in address;
     char client_ip[20];
     socklen_t address_len;
+    char* buffer;
+    request_t request;
 
     if (argc < 2) {
         fprintf(stderr, "Usage: %s <port> [root_path]", argv[0]);
@@ -111,11 +198,16 @@ main(int argc, char* argv[])
 
         read_headers(&clientfd, headers, &headers_num);
 
-        for (i = 0; i < headers_num; ++i) {
-            printf("%s", headers[i]);
-            free(headers + i);
+        if (headers_num == 0) {
+            buffer = "You must specify almost one header\n";
+            write(clientfd, buffer, strlen(buffer) + 1);
         }
 
+        parse_first_line(&request, headers[0], strlen(headers[0]));
+
+        for (i = 0; i < headers_num; ++i) {
+            free(headers + i);
+        }
         printf("[Connection closed]\n\n");
         close(clientfd);
     }

@@ -37,6 +37,18 @@ typedef enum {
     HTTP2, /* HTTP/2   */
 } http_t;
 
+char*
+http_text(http_t version)
+{
+    char* map[] = {
+        "HTTP/1.0",
+        "HTTP/1.1",
+        "HTTP/2"
+    };
+
+    return map[version];
+}
+
 typedef enum {
     /* Get some responses names from [1]
      *
@@ -44,14 +56,22 @@ typedef enum {
      */
     HTTP_200_OK,
     HTTP_206_PARTIAL_CONTENT,
+    HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
+    HTTP_405_METHOD_NOT_ALLOWED
     /* TODO: Include more and more responses */
 } response_t;
 
 char*
 response_text(response_t response)
 {
-    char* map[] = { "200 OK", "206 PARTIAL CONTENT", "404 NOT FOUND" };
+    char* map[] = {
+        "200 OK",
+        "206 PARTIAL CONTENT",
+        "400 BAD REQUEST",
+        "404 NOT FOUND",
+        "405 METHOD NOT ALLOWED"
+    };
 
     return map[response];
 }
@@ -214,21 +234,7 @@ read_file(char* root, request_t* request, int client)
 
     if ((fd = open(path, O_RDONLY)) == -1) {
         perror("Error opening the file on server");
-        response = HTTP_404_NOT_FOUND;
-        switch (request->http_version) {
-        case HTTP1:
-            strcpy(buffer, "HTTP/1.0 ");
-            break;
-        case HTTP1_1:
-            strcpy(buffer, "HTTP/1.1 ");
-            break;
-        case HTTP2:
-            strcpy(buffer, "HTTP/2 ");
-            break;
-        }
-
-        strcpy(buffer + strlen(buffer), response_text(response));
-        strcpy(buffer + strlen(buffer), "\n\n");
+        sprintf(buffer, "%s %s\n", http_text(request->http_version), response_text(HTTP_404_NOT_FOUND));
         write(client, buffer, strlen(buffer));
 
         return;
@@ -248,20 +254,7 @@ read_file(char* root, request_t* request, int client)
 
     /* First line of response */
     response = (is_partial_file) ? HTTP_206_PARTIAL_CONTENT : HTTP_200_OK;
-    switch (request->http_version) {
-    case HTTP1:
-        strcpy(buffer, "HTTP/1.0 ");
-        break;
-    case HTTP1_1:
-        strcpy(buffer, "HTTP/1.1 ");
-        break;
-    case HTTP2:
-        strcpy(buffer, "HTTP/2 ");
-        break;
-    }
-
-    strcpy(buffer + strlen(buffer), response_text(response));
-    strcpy(buffer + strlen(buffer), "\n");
+    sprintf(buffer, "%s %s\n", http_text(request->http_version), response_text(response));
     write(client, buffer, strlen(buffer));
 
     if (fstat(fd, &sb) != -1) {
@@ -307,7 +300,7 @@ main(int argc, char* argv[])
     struct sockaddr_in address;
     char client_ip[20];
     socklen_t address_len;
-    char* buffer;
+    char buffer[1024];
     request_t request;
 
     if (argc < 2) {
@@ -353,13 +346,20 @@ main(int argc, char* argv[])
         read_headers(&clientfd, headers, &headers_num);
 
         if (headers_num == 0) {
-            buffer = "You must specify almost one header\n";
-            write(clientfd, buffer, strlen(buffer) + 1);
+            sprintf(buffer, "HTTP/1.1 %s\n", response_text(HTTP_400_BAD_REQUEST));
+            write(clientfd, buffer, strlen(buffer));
         } else {
             if (parse_first_line(&request, headers[0], strlen(headers[0])) > -1) {
                 if (request.method == GET) {
                     read_file(www_path, &request, clientfd);
+                } else {
+                    /* TODO: allow methods */
+                    sprintf(buffer, "%s %s\n", http_text(request.http_version), response_text(HTTP_405_METHOD_NOT_ALLOWED));
+                    write(clientfd, buffer, strlen(buffer));
                 }
+            } else {
+                sprintf(buffer, "HTTP/1.1 %s\n", response_text(HTTP_400_BAD_REQUEST));
+                write(clientfd, buffer, strlen(buffer));
             }
         }
 

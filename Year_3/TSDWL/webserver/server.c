@@ -268,7 +268,7 @@ main(int argc, char* argv[])
         }
 
         for (i = 0; i < headers_num; ++i) {
-            free(headers + i);
+            free(headers[i]);
         }
         printf("[Connection closed]\n\n");
         close(clientfd);

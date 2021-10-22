@@ -355,11 +355,11 @@ main(int argc, char* argv[])
         if (headers_num == 0) {
             buffer = "You must specify almost one header\n";
             write(clientfd, buffer, strlen(buffer) + 1);
-        }
-
-        if (parse_first_line(&request, headers[0], strlen(headers[0])) > -1) {
-            if (request.method == GET) {
-                read_file(www_path, &request, clientfd);
+        } else {
+            if (parse_first_line(&request, headers[0], strlen(headers[0])) > -1) {
+                if (request.method == GET) {
+                    read_file(www_path, &request, clientfd);
+                }
             }
         }
 

@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <time.h>
 #include <unistd.h>
 
 #define DEFAULT_WWW "./www"
@@ -36,6 +37,25 @@ typedef enum {
     HTTP2, /* HTTP/2   */
 } http_t;
 
+typedef enum {
+    /* Get some responses names from [1]
+     *
+     * [1] https://www.django-rest-framework.org/api-guide/status-codes/#successful-2xx
+     */
+    HTTP_200_OK,
+    HTTP_206_PARTIAL_CONTENT,
+    HTTP_404_NOT_FOUND,
+    /* TODO: Include more and more responses */
+} response_t;
+
+char*
+response_text(response_t response)
+{
+    char* map[] = { "200 OK", "206 PARTIAL CONTENT", "404 NOT FOUND" };
+
+    return map[response];
+}
+
 typedef struct {
     methods method;
     char path[256]; /* FIXME: handle path with more than 256 chars */
@@ -53,7 +73,7 @@ read_headers(int* fd, char** headers, int* headers_num)
 
     *headers_num = 0;
 
-    while (1) {
+    while (*headers_num < 24) {
         i = 0;
 
         buffer[0] = '\0';
@@ -92,13 +112,15 @@ get_client_ip(int fd, char* buffer)
 }
 
 int
-parse_first_line(request_t* request, char* header, size_t len)
+parse_first_line(request_t* request, const char* header, size_t len)
 {
     char* token;
+    char line[255];
     int i;
 
     i = 0;
-    token = strtok(header, " ");
+    strcpy(line, header);
+    token = strtok(line, " ");
     do {
         switch (i) {
         case 0: {
@@ -150,7 +172,7 @@ parse_error:
 }
 
 void
-read_file(char* root, char* file, int client)
+read_file(char* root, request_t* request, int client)
 {
     /* FIXME: In Linux the max name length is 255, but here we include the 
      * root, and I don't want to use an array of 511 bytes (255*2+1). So I am
@@ -161,9 +183,21 @@ read_file(char* root, char* file, int client)
     int fd;
     int root_len;
     int file_len;
+    char* file;
+    response_t response;
+    int is_partial_file;
+    time_t now;
+    struct stat sb;
 
+    /* Copy the path because we shouldn't edit the variable on the stack */
+    file = request->path;
     root_len = strlen(root);
     file_len = strlen(file);
+
+    if (root[0] == '.' && root[1] == '/') {
+        root += 2;
+        root_len -= 2;
+    }
 
     if (root[root_len - 1] == '/') {
         root_len--;
@@ -179,20 +213,80 @@ read_file(char* root, char* file, int client)
     strncpy(path + root_len, file, file_len);
 
     if ((fd = open(path, O_RDONLY)) == -1) {
-        strcpy(buffer, "Error opening the file on server");
+        fprintf(stderr, "The file is: %s\n\n", path);
+        perror("Error opening the file on server");
+        response = HTTP_404_NOT_FOUND;
+        switch (request->http_version) {
+        case HTTP1:
+            strcpy(buffer, "HTTP/1.0 ");
+            break;
+        case HTTP1_1:
+            strcpy(buffer, "HTTP/1.1 ");
+            break;
+        case HTTP2:
+            strcpy(buffer, "HTTP/2 ");
+            break;
+        }
 
-        /* Write the error to the client and also to the server */
-        write(client, buffer, strlen(buffer) + 1);
-        perror(buffer);
+        strcpy(buffer + strlen(buffer), response_text(response));
+        strcpy(buffer + strlen(buffer), "\n\n");
+        write(client, buffer, strlen(buffer));
+
         return;
+    }
+
+    /* The first time search if it raises an error */
+    is_partial_file = 0;
+    while ((n = read(fd, buffer, sizeof(buffer))) != 0) {
+        if (n == -1) {
+            is_partial_file = 1;
+            break;
+        }
+    }
+
+    /* The second time send to client the file readed */
+    lseek(fd, SEEK_SET, 0);
+
+    /* First line of response */
+    response = (is_partial_file) ? HTTP_206_PARTIAL_CONTENT : HTTP_200_OK;
+    switch (request->http_version) {
+    case HTTP1:
+        strcpy(buffer, "HTTP/1.0 ");
+        break;
+    case HTTP1_1:
+        strcpy(buffer, "HTTP/1.1 ");
+        break;
+    case HTTP2:
+        strcpy(buffer, "HTTP/2 ");
+        break;
+    }
+
+    strcpy(buffer + strlen(buffer), response_text(response));
+    strcpy(buffer + strlen(buffer), "\n");
+    write(client, buffer, strlen(buffer));
+
+    if (fstat(fd, &sb) != -1) {
+        /* Thx to [1]
+         * [1] https://www.tutorialspoint.com/c_standard_library/c_function_ctime.htm
+         */
+        time(&now);
+        sprintf(buffer, "Date: %s", ctime(&now));
+        write(client, buffer, strlen(buffer));
+
+        sprintf(buffer, "Content-Type: text/txt; charset=UTF-8\n");
+        write(client, buffer, strlen(buffer));
+
+        sprintf(buffer, "Content-Length: %ld\n", sb.st_size);
+        write(client, buffer, strlen(buffer));
+
+        sprintf(buffer, "Last-Modified: %s\n", ctime(&sb.st_mtime));
+        write(client, buffer, strlen(buffer));
     }
 
     while ((n = read(fd, buffer, sizeof(buffer))) != 0) {
         if (n == -1) {
-            perror("Error reading the file");
             break;
         }
-
         buffer[n] = '\0';
         write(client, buffer, strlen(buffer) + 1);
     }
@@ -263,7 +357,7 @@ main(int argc, char* argv[])
 
         if (parse_first_line(&request, headers[0], strlen(headers[0])) > -1) {
             if (request.method == GET) {
-                read_file(www_path, request.path, clientfd);
+                read_file(www_path, &request, clientfd);
             }
         }
 

@@ -278,7 +278,10 @@ read_file(char* root, request_t* request, int client)
         sprintf(buffer, "Content-Length: %ld\n", sb.st_size);
         write(client, buffer, strlen(buffer));
 
-        sprintf(buffer, "Last-Modified: %s\n", ctime(&sb.st_mtime));
+        sprintf(buffer, "Last-Modified: %s", ctime(&sb.st_mtime));
+        write(client, buffer, strlen(buffer));
+
+        sprintf(buffer, "Connection: close\n\n");
         write(client, buffer, strlen(buffer));
     }
 

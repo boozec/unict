@@ -213,7 +213,6 @@ read_file(char* root, request_t* request, int client)
     strncpy(path + root_len, file, file_len);
 
     if ((fd = open(path, O_RDONLY)) == -1) {
-        fprintf(stderr, "The file is: %s\n\n", path);
         perror("Error opening the file on server");
         response = HTTP_404_NOT_FOUND;
         switch (request->http_version) {

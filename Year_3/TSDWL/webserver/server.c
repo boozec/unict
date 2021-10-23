@@ -174,7 +174,7 @@ parse_first_line(request_t* request, const char* header, size_t len)
             }
             break;
         }
-        /* If it comes here, it means that the header have more than 3 tokens */
+        /* If it comes here, it means that the header has more than 3 tokens */
         default: {
             fprintf(stderr, "Header does not have a valid syntax\n");
             goto parse_error;
@@ -249,7 +249,7 @@ read_file(char* root, request_t* request, int client)
         }
     }
 
-    /* The second time send to client the file readed */
+    /* The second time send to client the file read */
     lseek(fd, SEEK_SET, 0);
 
     /* First line of response */
@@ -310,7 +310,7 @@ main(int argc, char* argv[])
 
     www_path = (argc >= 3) ? argv[2] : DEFAULT_WWW;
 
-    /* Max 24 headers for now on the stack */
+    /* Max 24 headers for now in memory */
     headers = malloc(sizeof(char*) * 24);
 
     if ((sockfd = socket(PF_INET, SOCK_STREAM, 0)) == -1) {

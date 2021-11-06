@@ -265,7 +265,7 @@ read_file(char* root, request_t* request, int client)
         sprintf(buffer, "Date: %s", ctime(&now));
         write(client, buffer, strlen(buffer));
 
-        sprintf(buffer, "Content-Type: text/txt; charset=UTF-8\n");
+        sprintf(buffer, "Content-Type: text/html; charset=UTF-8\n");
         write(client, buffer, strlen(buffer));
 
         sprintf(buffer, "Content-Length: %ld\n", sb.st_size);

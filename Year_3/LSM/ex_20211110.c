@@ -197,9 +197,11 @@ TIM2_IRQHandler(void)
 
     if (status == OPEN) {
         counter_ta++;
-        if (counter_ta >= ta_time * 10) {
-            counter_ta = 0;
-            status = CLOSING;
+        if (counter_ta >= ta_time * 20) {
+            if (mode == AUTO) {
+                counter_ta = 0;
+                status = CLOSING;
+            }
         }
     }
 

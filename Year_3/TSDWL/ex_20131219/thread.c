@@ -5,7 +5,7 @@
 
 int m;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t cond;
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
 void*
 fn_t1(void* arg)
@@ -16,14 +16,13 @@ fn_t1(void* arg)
         pthread_mutex_lock(&mutex);
         if (m >= 1 && m <= 5) {
             xrand = (rand() % 10) + 1;
-            printf("Thread 1: (%d, %d)\n", m, xrand);
+            printf("Thread 1: (m = %d, xrand = %d)\n", m, xrand);
             m = xrand;
-            pthread_cond_broadcast(&cond);
-            pthread_mutex_unlock(&mutex);
+            pthread_cond_signal(&cond);
         } else {
-            pthread_mutex_unlock(&mutex);
             pthread_cond_wait(&cond, &mutex);
         }
+        pthread_mutex_unlock(&mutex);
     }
 
     pthread_exit(NULL);
@@ -38,14 +37,13 @@ fn_t2(void* arg)
         pthread_mutex_lock(&mutex);
         if (m >= 6 && m <= 10) {
             xrand = (rand() % 10) + 1;
-            printf("Thread 2: (%d, %d)\n", m, xrand);
+            printf("\t\t\tThread 2: (m = %d, xrand = %d)\n", m, xrand);
             m = xrand;
-            pthread_cond_broadcast(&cond);
-            pthread_mutex_unlock(&mutex);
+            pthread_cond_signal(&cond);
         } else {
-            pthread_mutex_unlock(&mutex);
             pthread_cond_wait(&cond, &mutex);
         }
+        pthread_mutex_unlock(&mutex);
     }
 
     pthread_exit(NULL);

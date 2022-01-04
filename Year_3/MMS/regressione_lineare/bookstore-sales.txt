@@ -1,0 +1,11 @@
+Number of Sales People Working	Sales (in $1000)
+2	10
+3	11
+7	13
+9	14
+10	18
+10	20
+12	20
+15	22
+16	22
+20	26

@@ -1,0 +1,31 @@
+Team	Team Abbr	League	Salary ($M)	W	L
+Arizona Diamondbacks	ARI	NL	91.995583	69	93
+Atlanta Braves	ATL	NL	77.073541	68	93
+Baltimore Orioles	BAL	AL	141.741213	89	73
+Boston Red Sox	BOS	AL	198.328678	93	69
+Chicago Cubs	CHC	NL	163.805667	103	58
+Chicago White Sox	CHW	AL	113.911667	78	84
+Cincinnati Reds	CIN	NL	80.905951	68	94
+Cleveland Indians	CLE	AL	92.652499	94	67
+Colorado Rockies	COL	NL	103.603571	75	87
+Detroit Tigers	DET	AL	192.3075	86	75
+Houston Astros	HOU	AL	89.0625	84	78
+Kansas City Royals	KCR	AL	136.564175	81	81
+Los Angeles Angels	LAA	AL	160.98619	74	88
+Los Angeles Dodgers	LAD	NL	248.321662	91	71
+Miami Marlins	MIA	NL	64.02	79	82
+Milwaukee Brewers	MIL	NL	51.2	73	89
+Minnesota Twins	MIN	AL	99.8125	59	103
+New York Mets	NYM	NL	128.413458	87	75
+New York Yankees	NYY	AL	221.574999	84	78
+Oakland Athletics	OAK	AL	80.613332	69	93
+Philadelphia Phillies	PHI	NL	91.616668	71	91
+Pittsburgh Pirates	PIT	NL	95.840999	78	83
+San Diego Padres	SDP	NL	94.12	68	94
+San Francisco Giants	SEA	AL	166.744443	86	76
+Seattle Mariners	SFG	NL	139.804258	87	75
+St. Louis Cardinals	STL	NL	143.514	86	76
+Tampa Bay Rays	TBR	AL	60.065366	68	94
+Texas Rangers	TEX	AL	158.68022	95	67
+Toronto Blue Jays	TOR	AL	131.905327	89	73
+Washington Nationals	WSN	NL	142.501785	95	67

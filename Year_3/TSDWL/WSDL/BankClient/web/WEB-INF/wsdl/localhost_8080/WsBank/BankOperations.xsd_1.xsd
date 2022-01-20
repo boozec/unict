@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is Metro/2.3.2-b608 (trunk-7979; 2015-01-21T12:50:19+0000) JAXWS-RI/2.2.11-b150120.1832 JAXWS-API/2.2.12 JAXB-RI/2.2.12-b141219.1637 JAXB-API/2.2.13-b141020.1521 svn-revision#unknown. --><xs:schema xmlns:tns="http://bank.exam.dmi.it/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://bank.exam.dmi.it/">
+
+<xs:element name="deposit" type="tns:deposit"/>
+
+<xs:element name="depositResponse" type="tns:depositResponse"/>
+
+<xs:element name="get" type="tns:get"/>
+
+<xs:element name="getAmount" type="tns:getAmount"/>
+
+<xs:element name="getAmountResponse" type="tns:getAmountResponse"/>
+
+<xs:element name="getResponse" type="tns:getResponse"/>
+
+<xs:complexType name="getAmount">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="getAmountResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:double"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deposit">
+<xs:sequence>
+<xs:element name="amount" type="xs:double"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="depositResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:bankOperations" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="bankOperations">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="get">
+<xs:sequence>
+<xs:element name="amount" type="xs:double"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:bankOperations" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

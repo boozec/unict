@@ -112,10 +112,11 @@ read_headers(int* fd, char** headers, int* headers_num)
             i++;
         }
 
-        buffer[i - 1] = '\0';
         if (i < 2) {
             break;
         }
+
+        buffer[i - 1] = '\0';
 
         memcpy(headers[*headers_num], buffer, i);
         (*headers_num)++;
@@ -341,7 +342,7 @@ main(int argc, char* argv[])
         }
 
         get_client_ip(clientfd, client_ip);
-        printf("Connection from '%s':\n", client_ip);
+        printf("Connection from '%s:%d':\n", inet_ntoa(address.sin_addr), address.sin_port);
 
         read_headers(&clientfd, headers, &headers_num);
 

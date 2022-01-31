@@ -13,7 +13,7 @@ typedef enum {
 status_t status = RUN;
 float real_root = 0;
 float new_want_root = 0;
-float want_root = 0;
+float want_root = 180;
 
 double rotation = 1;
 
@@ -37,7 +37,7 @@ init()
     TIM_init(TIM2);
     TIM_set(TIM2, 0);
     TIM_on(TIM2);
-    TIM_config_timebase(TIM2, 8400, 840);
+    TIM_config_timebase(TIM2, 8400, 100);
     TIM_enable_irq(TIM2, IRQ_UPDATE);
 
     ADC_init(ADC1, ADC_RES_12, ADC_ALIGN_RIGHT);
@@ -66,6 +66,10 @@ main()
 
             adc_read = (2 * adc_read) / 4095;
             real_root -= ((adc_read * 2) * (1.0 * rand()) / RAND_MAX - adc_read);
+            if (real_root > 180)
+                real_root = 180;
+            else if (real_root < -180)
+                real_root = -180;
 
             printf("%f %f %f\n", rotation, real_root, want_root);
             sprintf(s, "%f", real_root);

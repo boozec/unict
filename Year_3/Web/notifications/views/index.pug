@@ -1,0 +1,11 @@
+doctype
+html
+    head
+        script(src="/socket.io/socket.io.js")
+        script
+            | var socket = io()
+    body
+        #notifications
+        h1 Hello man, ur n° #{id}
+
+        script(src="./notifications.js")

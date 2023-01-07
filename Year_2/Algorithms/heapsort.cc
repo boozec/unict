@@ -1,3 +1,4 @@
+// FIX: This file does not make the "right" number of heapify calls
 #include <fstream>
 #include <iostream>
 
@@ -22,13 +23,13 @@ public:
 
     heap(HeapType type, T* arr, int size)
         : _type(type)
-        , _n { size + 1 }
+        , _n { size }
     {
-        _heapsize = size - 1;
+        _heapsize = size;
 
         a = new T[size + 1];
 
-        for (int i = 1; i < _n; ++i) {
+        for (int i = 1; i <= _n; ++i) {
             a[i] = arr[i - 1];
         }
 
@@ -46,13 +47,13 @@ public:
     heap<T>*
     insert(T key)
     {
-        if (_heapsize == _n - 1)
+        if (_heapsize == _n)
             return this;
 
         a[++_heapsize] = key;
 
         unsigned i = _heapsize;
-        while (i > 1 && compare(i >> 1, i)) {
+        while (i > 1 && compare(i >> 1, i) > 0) {
             swap(i, i >> 1);
             i >>= 1;
         }
@@ -135,7 +136,7 @@ private:
 };
 
 int
-main()
+main(int argc, char** argv)
 {
     ifstream fin("input.txt");
     ofstream fout("output.txt");
@@ -143,22 +144,24 @@ main()
     string type;
     int n;
 
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < atoi(argv[1]); ++i) {
         fin >> type >> n;
 
         if (type == "int") {
 
             int k;
 
-            heap<int>* h = new heap<int>(HeapType::MIN, n * 10);
+            int* keys = new int[n];
+
             for (int j = 0; j < n; ++j) {
-                fin >> k;
-                h->insert(k);
+                fin >> keys[j];
             }
+            heap<int>* h = new heap<int>(HeapType::MIN, keys, n);
 
             h->heapsort(fout);
 
             delete h;
+            delete[] keys;
         } else if (type == "char") {
             char* keys = new char[n];
 
@@ -166,7 +169,7 @@ main()
                 fin >> keys[j];
             }
 
-            heap<char>* h = new heap<char>(HeapType::MIN, keys, n + 1);
+            heap<char>* h = new heap<char>(HeapType::MIN, keys, n);
 
             h->heapsort(fout);
 
@@ -179,7 +182,7 @@ main()
                 fin >> keys[j];
             }
 
-            heap<bool>* h = new heap<bool>(HeapType::MIN, keys, n + 1);
+            heap<bool>* h = new heap<bool>(HeapType::MIN, keys, n);
 
             h->heapsort(fout);
 
@@ -192,7 +195,7 @@ main()
                 fin >> keys[j];
             }
 
-            heap<double>* h = new heap<double>(HeapType::MIN, keys, n + 1);
+            heap<double>* h = new heap<double>(HeapType::MIN, keys, n);
 
             h->heapsort(fout);
 

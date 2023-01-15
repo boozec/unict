@@ -1,206 +1,180 @@
-// FIX: This file does not make the "right" number of heapify calls
 #include <fstream>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
 enum class HeapType {
-    MAX,
-    MIN,
+    Min,
+    Max
 };
 
-template <class T>
-class heap {
+template <typename H>
+class Heap {
 public:
-    heap(HeapType type, int size)
-        : _type(type)
-        , _n { size }
+    Heap(HeapType type, int n)
+        : n_ { n + 1 }
+        , type_ { type }
     {
-        _heapsize = 0;
-
-        a = new T[size + 1];
+        a_ = new H[n + 1];
+        a_[0] = 0;
     }
 
-    heap(HeapType type, T* arr, int size)
-        : _type(type)
-        , _n { size }
+    ~Heap()
     {
-        _heapsize = size;
-
-        a = new T[size + 1];
-
-        for (int i = 1; i <= _n; ++i) {
-            a[i] = arr[i - 1];
-        }
-
-        build(_heapsize);
-    }
-
-    void
-    swap(unsigned x, unsigned y)
-    {
-        auto t = a[x];
-        a[x] = a[y];
-        a[y] = t;
-    }
-
-    heap<T>*
-    insert(T key)
-    {
-        if (_heapsize == _n)
-            return this;
-
-        a[++_heapsize] = key;
-
-        unsigned i = _heapsize;
-        while (i > 1 && compare(i >> 1, i) > 0) {
-            swap(i, i >> 1);
-            i >>= 1;
-        }
-
-        return this;
+        delete[] a_;
     }
 
     void
     heapify(int i)
     {
-        _heapify_count++;
-        int l = i << 1;
-        int r = l | 1;
+        if (heapsize_ >= 1)
+            count_++;
 
+        int l = left(i);
+        int r = right(i);
         int max = i;
-        if (l <= _heapsize && compare(l, max) < 0)
+
+        if (l <= heapsize_ && !compare(l, i))
             max = l;
-        if (r <= _heapsize && compare(r, max) < 0)
+        if (r <= heapsize_ && !compare(r, max))
             max = r;
 
         if (max != i) {
-            swap(i, max);
+            swap(a_[i], a_[max]);
             heapify(max);
         }
     }
 
     void
-    build(int n)
+    build(H aux[], int n)
     {
-        for (unsigned i = n / 2; i > 0; --i) {
+        a_ = aux;
+        heapsize_ = n;
+
+        for (int i = heapsize_ / 2; i > 0; --i) {
             heapify(i);
         }
     }
 
-    T
+    H
     extract()
     {
-        swap(1, _heapsize);
-        --_heapsize;
+        swap(a_[1], a_[heapsize_]);
+        heapsize_--;
         heapify(1);
-        return *(a + _heapsize + 1);
+
+        return a_[heapsize_ + 1];
+    }
+
+    inline int
+    left(int i)
+    {
+        return i << 1;
+    }
+    inline int
+    right(int i)
+    {
+        return (i << 1) | 1;
     }
 
     void
-    heapsort(ofstream& fout)
+    sort(ostream& out)
     {
-        T* b = new T[_heapsize];
+        H* b = new H[heapsize_ + 1];
 
-        _heapify_count = 0;
-        int n = _heapsize;
-        for (unsigned i = 0; i < n; ++i) {
+        int n = heapsize_;
+
+        for (unsigned i = n; i > 0; --i) {
             b[i] = extract();
         }
-        fout << _heapify_count << ' ';
-        for (unsigned i = 0; i < n; ++i) {
-            fout << b[i] << ' ';
+        out << count_ << ' ';
+        for (unsigned i = 1; i < n_; ++i) {
+            out << b[i] << ' ';
         }
-        fout << endl;
+        out << endl;
 
         delete[] b;
     }
 
-    ~heap()
-    {
-        delete[] a;
-    }
-
-    int
-    compare(unsigned x, unsigned y)
-    {
-        return _type == HeapType::MIN ? a[x] - a[y] : a[y] - a[x];
-    }
-
 private:
-    HeapType _type;
-    int _n;
-    int _heapsize;
-    T* a;
-    unsigned _heapify_count = 0;
+    H* a_;
+    int heapsize_ { 0 };
+    int n_;
+    HeapType type_;
+    int
+    compare(int i, int j)
+    {
+        return (type_ == HeapType::Min) ? a_[i] < a_[j] : a_[j] > a_[i];
+    }
+    int count_ { 0 };
 };
 
 int
 main(int argc, char** argv)
 {
+    int n = (argc > 1) ? stoi(argv[1]) : 100;
     ifstream fin("input.txt");
     ofstream fout("output.txt");
 
-    string type;
-    int n;
+    string t;
+    int m;
 
-    for (int i = 0; i < atoi(argv[1]); ++i) {
-        fin >> type >> n;
+    for (int i = 0; i < n; ++i) {
+        fin >> t >> m;
 
-        if (type == "int") {
+        if (t == "int") {
+            Heap<int>* pq = new Heap<int>(HeapType::Max, m);
+            int* k = new int[m + 1];
 
-            int k;
-
-            int* keys = new int[n];
-
-            for (int j = 0; j < n; ++j) {
-                fin >> keys[j];
+            k[0] = 0;
+            for (int j = 1; j <= m; ++j) {
+                fin >> k[j];
             }
-            heap<int>* h = new heap<int>(HeapType::MIN, keys, n);
+            pq->build(k, m);
 
-            h->heapsort(fout);
+            pq->sort(fout);
 
-            delete h;
-            delete[] keys;
-        } else if (type == "char") {
-            char* keys = new char[n];
+            delete pq;
+        } else if (t == "double") {
+            Heap<double>* pq = new Heap<double>(HeapType::Max, m);
+            double* k = new double[m + 1];
 
-            for (int j = 0; j < n; ++j) {
-                fin >> keys[j];
+            k[0] = 0;
+            for (int j = 1; j <= m; ++j) {
+                fin >> k[j];
             }
+            pq->build(k, m);
 
-            heap<char>* h = new heap<char>(HeapType::MIN, keys, n);
+            pq->sort(fout);
 
-            h->heapsort(fout);
+            delete pq;
+        } else if (t == "bool") {
+            Heap<bool>* pq = new Heap<bool>(HeapType::Max, m);
+            bool* k = new bool[m + 1];
 
-            delete h;
-            delete[] keys;
-        } else if (type == "bool") {
-            bool* keys = new bool[n];
-
-            for (int j = 0; j < n; ++j) {
-                fin >> keys[j];
+            k[0] = 0;
+            for (int j = 1; j <= m; ++j) {
+                fin >> k[j];
             }
+            pq->build(k, m);
 
-            heap<bool>* h = new heap<bool>(HeapType::MIN, keys, n);
+            pq->sort(fout);
 
-            h->heapsort(fout);
+            delete pq;
+        } else if (t == "char") {
+            Heap<char>* pq = new Heap<char>(HeapType::Max, m);
+            char* k = new char[m + 1];
 
-            delete h;
-            delete[] keys;
-        } else if (type == "double") {
-            double* keys = new double[n];
-
-            for (int j = 0; j < n; ++j) {
-                fin >> keys[j];
+            k[0] = 0;
+            for (int j = 1; j <= m; ++j) {
+                fin >> k[j];
             }
+            pq->build(k, m);
 
-            heap<double>* h = new heap<double>(HeapType::MIN, keys, n);
+            pq->sort(fout);
 
-            h->heapsort(fout);
-
-            delete h;
-            delete[] keys;
+            delete pq;
         }
     }
 

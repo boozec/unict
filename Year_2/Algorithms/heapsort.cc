@@ -35,9 +35,9 @@ public:
         int r = right(i);
         int max = i;
 
-        if (l <= heapsize_ && !compare(l, i))
+        if (l <= heapsize_ && compare(l, max))
             max = l;
-        if (r <= heapsize_ && !compare(r, max))
+        if (r <= heapsize_ && compare(r, max))
             max = r;
 
         if (max != i) {
@@ -102,10 +102,11 @@ private:
     int heapsize_ { 0 };
     int n_;
     HeapType type_;
-    int
+
+    bool
     compare(int i, int j)
     {
-        return (type_ == HeapType::Min) ? a_[i] < a_[j] : a_[j] > a_[i];
+        return (type_ == HeapType::Max) ? a_[i] > a_[j] : a_[j] > a_[i];
     }
     int count_ { 0 };
 };

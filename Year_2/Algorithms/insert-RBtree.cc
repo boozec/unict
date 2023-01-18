@@ -97,11 +97,6 @@ public:
     {
     }
 
-    ~RBtree()
-    {
-        destructor(root_);
-    }
-
     RBtree<H>*
     insert(H key)
     {
@@ -183,57 +178,23 @@ private:
     Node<H>* root_ { nullptr };
 
     Node<H>*
-    minimum(Node<H>* x)
-    {
-        if (!x)
-            return x;
-
-        while (x->left())
-            x = x->left();
-
-        return x;
-    }
-
-    Node<H>*
-    successor(Node<H>* x)
-    {
-        if (!x)
-            return x;
-
-        if (x->right()) {
-            return minimum(x->right());
-        }
-
-        auto y = x->parent();
-        while (y && x == y->right()) {
-            x = y;
-            y = y->parent();
-        }
-
-        return y;
-    }
-
-    void
-    destructor(Node<H>* x)
-    {
-        if (!x)
-            return;
-
-        destructor(x->left());
-        destructor(x->right());
-        delete x;
-    }
-
-    Node<H>*
     search(H key)
     {
         auto t = this->root();
 
-        while (t && key != t->key()) {
+        while (t != nullptr && key != t->key()) {
             if (key < t->key()) {
-                t = t->left();
+                if (t->left()) {
+                    t = t->left();
+                } else {
+                    break;
+                }
             } else {
-                t = t->right();
+                if (t->right()) {
+                    t = t->right();
+                } else {
+                    break;
+                }
             }
         }
 

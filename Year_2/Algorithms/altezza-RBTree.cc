@@ -143,75 +143,17 @@ public:
         return root_;
     }
 
-    void
-    printPre(Node<H>* node, ostream& out)
+    unsigned long
+    bh(Node<H>* x)
     {
-        if (node == nullptr) {
-            return;
-        }
+        if (!x)
+            return 0;
 
-        out << "(" << node->key() << " " << (node->color() == Color::Red ? 'R' : 'B') << ") ";
-        printPre(node->left(), out);
-        printPre(node->right(), out);
-    }
-
-    void
-    printIn(Node<H>* node, ostream& out)
-    {
-        if (node == nullptr) {
-            return;
-        }
-
-        printIn(node->left(), out);
-        out << "(" << node->key() << " " << (node->color() == Color::Red ? 'R' : 'B') << ") ";
-        printIn(node->right(), out);
-    }
-
-    void
-    printPost(Node<H>* node, ostream& out)
-    {
-        if (node == nullptr) {
-            return;
-        }
-
-        printPost(node->left(), out);
-        printPost(node->right(), out);
-        out << "(" << node->key() << " " << (node->color() == Color::Red ? 'R' : 'B') << ") ";
+        return 1 + max(bh(x->left()), bh(x->right()));
     }
 
 private:
     Node<H>* root_ { nullptr };
-
-    Node<H>*
-    minimum(Node<H>* x)
-    {
-        if (!x)
-            return x;
-
-        while (x->left())
-            x = x->left();
-
-        return x;
-    }
-
-    Node<H>*
-    successor(Node<H>* x)
-    {
-        if (!x)
-            return x;
-
-        if (x->right()) {
-            return minimum(x->right());
-        }
-
-        auto y = x->parent();
-        while (y && x == y->right()) {
-            x = y;
-            y = y->parent();
-        }
-
-        return y;
-    }
 
     void
     destructor(Node<H>* x)
@@ -330,13 +272,13 @@ int
 main(int argc, char** argv)
 {
     int n = (argc > 1) ? stoi(argv[1]) : 100;
-    string t, print;
+    string t;
     int m;
     ifstream fin("input.txt");
     ofstream fout("output.txt");
 
     for (int i = 0; i < n; ++i) {
-        fin >> t >> m >> print;
+        fin >> t >> m;
 
         if (t == "int") {
             RBtree<int>* rb = new RBtree<int>();
@@ -345,12 +287,7 @@ main(int argc, char** argv)
                 fin >> k;
                 rb->insert(k);
             }
-            if (print == "preorder")
-                rb->printPre(rb->root(), fout);
-            else if (print == "postorder")
-                rb->printPost(rb->root(), fout);
-            else if (print == "inorder")
-                rb->printIn(rb->root(), fout);
+            fout << rb->bh(rb->root()) << endl;
         } else if (t == "double") {
             RBtree<double>* rb = new RBtree<double>();
             double k;
@@ -358,14 +295,8 @@ main(int argc, char** argv)
                 fin >> k;
                 rb->insert(k);
             }
-            if (print == "preorder")
-                rb->printPre(rb->root(), fout);
-            else if (print == "postorder")
-                rb->printPost(rb->root(), fout);
-            else if (print == "inorder")
-                rb->printIn(rb->root(), fout);
+            fout << rb->bh(rb->root()) << endl;
         }
-        fout << endl;
     }
 
     fin.close();

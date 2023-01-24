@@ -12,7 +12,7 @@ change(vector<int>& coins, int sum)
 	int n = coins.size();
 
 	int* table = new int[sum+1];
-	memset(table, sum, 0);
+	memset(table, 0, sum);
 
 	table[0] = 0;
 	for (int i = 1; i < sum+1; ++i) {
